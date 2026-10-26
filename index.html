@@ -228,6 +228,28 @@ html:not(.js) body{padding-bottom:24px}
 .sc{padding-right:14px}.sc::after{display:none}.sc .more{display:block;margin-right:0}
 .sv .r,.sv .box,.sv .step,.sv .gq{break-inside:avoid}
 
+/* rights guide chat */
+.cbtn{position:fixed;z-index:6;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(92px + env(safe-area-inset-bottom,0px));display:inline-flex;align-items:center;gap:8px;min-height:52px;padding:12px 18px 12px 14px;background:var(--pri);border-color:var(--pri);color:#fff;font-size:17px;box-shadow:0 14px 30px -12px rgba(43,33,80,.65)}
+.cbtn:hover{background:var(--pri2);border-color:var(--pri2)}
+.cbtn svg{width:22px;height:22px}
+.cpanel{position:fixed;z-index:7;right:calc(10px + env(safe-area-inset-right,0px));bottom:calc(92px + env(safe-area-inset-bottom,0px));width:min(420px,calc(100vw - 20px));height:min(580px,calc(100vh - 120px));display:flex;flex-direction:column;overflow:hidden;background:var(--card);border:1.5px solid var(--line);border-radius:22px;box-shadow:0 24px 50px -20px rgba(43,33,80,.6)}
+.cpanel[hidden],.cbtn[hidden]{display:none}
+.chead{display:flex;align-items:center;gap:10px;padding:12px 8px 12px 16px;background:var(--hbg);color:var(--hink)}
+.chead b{display:block;font:700 19px/1.2 var(--disp)}.chead small{display:block;color:var(--hsub);font-size:13px}
+.cx{margin-left:auto;width:44px;min-height:44px;padding:0;border:0;background:transparent;color:inherit;font-size:28px;line-height:1}
+.clog{flex:1;min-height:0;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:88%;padding:10px 14px;border-radius:16px;font-size:16px;line-height:1.5;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;background:var(--pri);color:#fff;border-bottom-right-radius:6px}
+.msg.bot{align-self:flex-start;background:var(--wash);color:var(--ink);border-bottom-left-radius:6px}
+.msg.wait{color:var(--mute);font-style:italic}
+.macts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.macts button{min-height:38px;padding:6px 12px;font-size:14px}
+.csug{display:flex;gap:6px;overflow-x:auto;padding:0 12px 8px;flex:none}
+.csug button{flex:none;min-height:38px;padding:6px 12px;font-size:14px;font-weight:500}
+.cform{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line);flex:none}
+.cform input{flex:1;min-width:0;padding:10px 12px}.cform button{min-height:46px;padding:10px 16px}
+.cfoot{margin:0;padding:0 12px 10px;font-size:13px;color:var(--mute);flex:none}
+@media print{.cbtn,.cpanel{display:none!important}}
+
 /* comfort modes */
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 body.calm{font-size:22px;line-height:1.7}
@@ -481,6 +503,86 @@ $("lis").onclick=function(){var d=D[lang];say(d.R.map(function(r){return r[1]+".
 draw();
 (function(){var h=(location.hash||"").slice(1),t=h=="game"?"gamesec":h;if(["what","complain","tools","gamesec","help"].indexOf(t)>=0)show(t)})();
 addEventListener("hashchange",function(){var h=location.hash.slice(1),t=h=="game"?"gamesec":h;if(["rights","what","complain","tools","gamesec","help"].indexOf(t)>=0&&t!=tab)show(t)});
+</script>
+<script>
+/* Rights guide chat: AI answers via /api/chat when the site is hosted, built-in guide otherwise. */
+(function(){
+var CH={en:{ask:"Ask",title:"Rights guide",subAI:"AI assistant · a guide, not legal advice",subLocal:"Built-in guide · not legal advice",ph:"Ask about your rights…",send:"Send",close:"Close",
+hello:"Hi! Ask me about your rights on the ward, how to complain, or where to get free help. You can write in English or Hindi.",
+sug:["I can't call my family","How do I complain?","Can I leave the hospital?","I need a free lawyer","What is a nominated representative?"],
+crisis:"I'm really sorry you're going through this. You don't have to face it alone. Please talk to someone now: call Tele-MANAS on 14416 (free, any time), or 112 if you are in immediate danger. You can also tell a nurse or doctor on the ward right away.",
+foot:"In crisis? Tele-MANAS 14416 · Emergency 112",wait:"Thinking…",
+nomatch:"I'm not sure about that one. Try asking about family contact, treatment, records, privacy, leaving hospital, restraint or complaints. For free legal help, call NALSA on 15100.",
+openC:"Open the complaint form",openT:"Open Tools",openH:"See all helplines"},
+hi:{ask:"पूछें",title:"अधिकार गाइड",subAI:"एआई सहायक · मार्गदर्शन, कानूनी सलाह नहीं",subLocal:"अंतर्निहित गाइड · कानूनी सलाह नहीं",ph:"अपने अधिकारों के बारे में पूछें…",send:"भेजें",close:"बंद करें",
+hello:"नमस्ते! वार्ड में अपने अधिकारों, शिकायत करने के तरीके या मुफ़्त मदद के बारे में पूछें। आप हिंदी या अंग्रेज़ी में लिख सकते हैं।",
+sug:["मैं परिवार को फ़ोन नहीं कर पा रहा/रही","शिकायत कैसे करूँ?","क्या मैं अस्पताल छोड़ सकता/सकती हूँ?","मुझे मुफ़्त वकील चाहिए","नामित प्रतिनिधि क्या है?"],
+crisis:"मुझे बहुत दुख है कि आप इससे गुज़र रहे हैं। आप अकेले नहीं हैं। कृपया अभी किसी से बात करें: टेली-मानस 14416 (मुफ़्त, कभी भी) पर फ़ोन करें, या तुरंत ख़तरा हो तो 112। आप वार्ड की नर्स या डॉक्टर को भी अभी बता सकते हैं।",
+foot:"संकट में? टेली-मानस 14416 · आपातकाल 112",wait:"सोच रहा हूँ…",
+nomatch:"इसके बारे में मुझे पक्का नहीं पता। परिवार से संपर्क, इलाज, रिकॉर्ड, गोपनीयता, अस्पताल छोड़ने, बाँधने या शिकायत के बारे में पूछें। मुफ़्त कानूनी मदद के लिए नालसा 15100 पर फ़ोन करें।",
+openC:"शिकायत फॉर्म खोलें",openT:"साधन खोलें",openH:"सभी हेल्पलाइन देखें"}};
+var CRISIS=/suicid|kill myself|end (my|it all)|want to die|don'?t want to live|self.?harm|hurt myself|cut myself|आत्महत्या|मरना चाह|जीना नहीं|खुद को नुकसान|ख़ुद को नुकसान|जान दे/i;
+var TOPICS=[
+ {k:/complain|complaint|board|appeal|grievance|report (the|a) staff|शिकायत|बोर्ड|अपील/i,t:"complain"},
+ {k:/nominat|representative|advance directive|guardian|प्रतिनिधि|अग्रिम निर्देश/i,t:"nr"},
+ {k:/helpline|number|call for help|emergency|हेल्पलाइन|नंबर|आपातकाल/i,t:"help"},
+ {k:/child|minor|under 18|son|daughter|ect|shock|नाबालिग|बच्च|शॉक/i,r:13},
+ {k:/period|menstru|pad|woman|women|mother|baby|माहवारी|महिला|माँ|शिशु/i,r:12},
+ {k:/chain|tied|tie me|restrain|lock|alone|seclu|ज़ंजीर|जंजीर|बाँध|बांध|बंद कर/i,r:10},
+ {k:/leave|discharge|admit|admission|go home|against my will|30 days|छुट्टी|भर्ती|घर जा|छोड़ सक/i,r:11},
+ {k:/lawyer|legal|advocate|वकील|कानूनी/i,r:8},
+ {k:/family|call|phone|visit|contact|friend|परिवार|फ़ोन|फोन|मिलने|संपर्क|दोस्त/i,r:7},
+ {k:/record|file|report|notes|रिकॉर्ड|फ़ाइल|फाइल/i,r:6},
+ {k:/private|privacy|shared|told my|confiden|media|photo|employer|गोपनीय|निजी|फ़ोटो|नियोक्ता/i,r:5},
+ {k:/explain|treatment|medicine|side effect|information|diagnos|इलाज के बारे|दवा|जानकारी|बीमारी क्या/i,r:4},
+ {k:/unfair|discriminat|equal|insurance|ambulance|भेदभाव|बराबर|बीमा|एम्बुलेंस/i,r:3},
+ {k:/cruel|rude|abuse|beat|hit|shout|dignity|clothes|food|dirty|toilet|forced to work|shave|क्रूर|मार|गाली|खाना|कपड़े|गंदा|शौचालय|सम्मान/i,r:2},
+ {k:/homeless|no family|community|family won'?t|बेघर|समाज/i,r:1},
+ {k:/free|cost|pay|poor|bpl|money|care|मुफ़्त|पैसे|गरीब|इलाज/i,r:0}];
+var hist=[],aiOff=false,busy=false;
+function c(){return CH[lang]}
+function esc2(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function fmt(s){return esc2(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/^\s*[-*] /gm,"• ").replace(/\n/g,"<br>")}
+function add(who,html,acts){var m=document.createElement("div");m.className="msg "+who;m.innerHTML=html;
+ if(acts&&acts.length){var a=document.createElement("div");a.className="macts";acts.forEach(function(x){var b=document.createElement("button");b.type="button";b.textContent=x[0];b.onclick=function(){closeP();show(x[1])};a.appendChild(b)});m.appendChild(a)}
+ $("clog").appendChild(m);$("clog").scrollTop=$("clog").scrollHeight;return m}
+function local(q){var lg=/[\u0900-\u097F]/.test(q)?"hi":(/[a-z]{3}/i.test(q)?"en":lang),d=D[lg],xl=lg=="hi"?XH:X,cc=CH[lg],c=function(){return cc};
+ if(CRISIS.test(q))return{t:c().crisis,a:[[c().openH,"help"]]};
+ for(var i=0;i<TOPICS.length;i++){var T=TOPICS[i];if(!T.k.test(q))continue;
+  if(T.t=="complain")return{t:d.steps.map(function(s,j){return (j+1)+". "+s}).join("\n")+"\n\n"+d.tw,a:[[c().openC,"complain"]]};
+  if(T.t=="nr"){var g=N[lg].GL;return{t:"**"+g[0][0]+"**: "+g[0][1]+"\n\n**"+g[1][0]+"**: "+g[1][1],a:[[c().openT,"tools"]]}}
+  if(T.t=="help")return{t:d.HL.map(function(h){return "• "+h[1]+": "+(h[2].length?h[2].map(function(l){return l[0].replace(/^\S+ /,"")}).join(", "):h[3])}).join("\n"),a:[[c().openH,"help"]]};
+  var r=d.R[T.r];return{t:"**"+r[1]+"**: "+r[2]+(xl[r[3]]?"\n\n"+xl[r[3]]:"")+"\n\n"+d.sec+r[3],a:[[c().openC,"complain"]]}}
+ return{t:c().nomatch,a:[[c().openH,"help"]]}}
+function setSub(){$("csub").textContent=aiOff?c().subLocal:c().subAI}
+function ask(q){q=q.trim();if(!q||busy)return;add("me",esc2(q));$("cin").value="";
+ if(CRISIS.test(q)){var L=local(q);add("bot",fmt(L.t),L.a);return}
+ hist.push({role:"user",content:q});
+ if(aiOff||!/^https?:/.test(location.protocol)){aiOff=true;setSub();answerLocal(q);return}
+ busy=true;var w=add("bot wait",c().wait);
+ fetch("api/chat",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({lang:lang,messages:hist.slice(-10)})})
+ .then(function(r){if(!r.ok)throw r.status;return r.json()})
+ .then(function(j){w.remove();if(!j.reply)throw 0;hist.push({role:"assistant",content:j.reply});add("bot",fmt(j.reply))})
+ .catch(function(e){w.remove();if(e==404||e==503||e==405||typeof e!="number")aiOff=true;setSub();answerLocal(q)})
+ .then(function(){busy=false})}
+function answerLocal(q){var L=local(q);hist.push({role:"assistant",content:L.t});add("bot",fmt(L.t),L.a)}
+function openP(){$("cpanel").hidden=false;$("cbtn").hidden=true;$("cbtn").setAttribute("aria-expanded","true");if(!$("clog").children.length)add("bot",fmt(c().hello));setTimeout(function(){$("cin").focus()},50)}
+function closeP(){$("cpanel").hidden=true;$("cbtn").hidden=false;$("cbtn").setAttribute("aria-expanded","false");$("cbtn").focus()}
+var ICO='<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8.5 8.5 0 0 1-12.3 7.6L4 20.5l1-4.4A8.5 8.5 0 1 1 21 12z"/><path d="M8.5 11h.01M12 11h.01M15.5 11h.01"/></svg>';
+var root=document.createElement("div");root.className="noprint";
+root.innerHTML='<button id="cbtn" class="cbtn" aria-expanded="false" aria-controls="cpanel">'+ICO+'<span id="cask"></span></button>'
++'<div id="cpanel" class="cpanel" role="dialog" aria-labelledby="ctitle" hidden><div class="chead"><div><b id="ctitle"></b><small id="csub"></small></div><button type="button" class="cx" id="cx">×</button></div>'
++'<div class="clog" id="clog" aria-live="polite"></div><div class="csug" id="csug"></div>'
++'<form class="cform" id="cform"><input id="cin" autocomplete="off" maxlength="500"><button class="pri" type="submit" id="csend"></button></form><p class="cfoot" id="cfoot"></p></div>';
+document.body.appendChild(root);
+function labels(){var t=c();$("cask").textContent=t.ask;$("ctitle").textContent=t.title;setSub();$("cin").placeholder=t.ph;$("cin").setAttribute("aria-label",t.ph);$("csend").textContent=t.send;$("cx").setAttribute("aria-label",t.close);$("cfoot").textContent=t.foot;
+ $("csug").innerHTML="";t.sug.forEach(function(s){var b=document.createElement("button");b.type="button";b.textContent=s;b.onclick=function(){ask(s)};$("csug").appendChild(b)})}
+$("cbtn").onclick=openP;$("cx").onclick=closeP;
+$("cform").onsubmit=function(e){e.preventDefault();ask($("cin").value)};
+document.addEventListener("keydown",function(e){if(e.key=="Escape"&&!$("cpanel").hidden)closeP()});
+var _d=draw;draw=function(){_d();labels()};labels();
+window.chatAsk=ask;window.chatLocal=local;
+})();
 </script>
 <script>if("serviceWorker"in navigator&&(location.protocol=="https:"||location.hostname=="localhost"))addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})</script>
 </body>

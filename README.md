@@ -26,6 +26,7 @@ Upload **everything in this folder** (not the folder's parent) to one of these.
 | File | What it does |
 |---|---|
 | `index.html` | The whole app, plus a reading version for viewers that block JavaScript |
+| `api/chat.js` | The AI assistant's server (runs on Vercel; needs an API key) |
 | `sw.js` | Lets the site open offline after the first visit |
 | `manifest.webmanifest`, icons | Let phones install it to the home screen like an app |
 
@@ -34,3 +35,13 @@ Upload **everything in this folder** (not the folder's parent) to one of these.
 - Open the **Tools → Ward poster** tool: the QR code fills in the site's own address automatically.
 - Add `#help`, `#complain`, `#what`, `#tools` or `#game` to the address to open that tab directly.
 - To update the site, replace `index.html` with the new version and upload again.
+
+## Turning on the AI assistant (Vercel)
+
+The chat button works straight away with a built-in guide. To switch on AI answers:
+
+1. Get an API key from https://console.anthropic.com (API usage is billed per use; Claude Haiku is the cheapest model).
+2. In Vercel, open the project → **Settings → Environment Variables**, add `ANTHROPIC_API_KEY` with your key, and save.
+3. Redeploy. The chat header changes from "Built-in guide" to "AI assistant".
+
+Never put the key in `index.html` or commit it to GitHub; it stays secret in Vercel.
